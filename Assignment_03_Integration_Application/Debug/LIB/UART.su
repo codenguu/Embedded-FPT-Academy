@@ -1,0 +1,6 @@
+../LIB/UART.c:12:6:UART_Init	32	static
+../LIB/UART.c:64:6:UART_SendChar	16	static
+../LIB/UART.c:78:6:UART_SendString	24	static
+../LIB/UART.c:96:9:UART_RecverPoll	16	static
+../LIB/UART.c:110:9:UART_DataReceive	16	static
+../LIB/UART.c:116:6:UART0_IRQHandler	8	static

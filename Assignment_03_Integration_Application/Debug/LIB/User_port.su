@@ -1,0 +1,5 @@
+../LIB/User_port.h:54:20:PORT_EXTI_ClearFlag	16	static
+../LIB/User_port.c:13:6:PORT_Pin_Init	24	static
+../LIB/User_port.c:32:6:PORT_EXTI_Config	16	static
+../LIB/User_port.c:53:6:PORTC_PORTD_IRQHandler	16	static
+../LIB/User_port.c:69:6:PORTA_IRQHandler	16	static
