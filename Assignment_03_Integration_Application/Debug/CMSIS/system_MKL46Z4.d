@@ -1,4 +1,4 @@
-CMSIS/system_MKL46Z4.o: \
+CMSIS/system_MKL46Z4.o CMSIS/system_MKL46Z4.d: \
  C:/Users/SF/mcuxpresso/02/SDKPackages/SDK_2_4_1_FRDM-KL46Z/devices/MKL46Z4/system_MKL46Z4.c \
  C:/Users/SF/mcuxpresso/02/SDKPackages/SDK_2_4_1_FRDM-KL46Z/devices/MKL46Z4/fsl_device_registers.h \
  C:/Users/SF/mcuxpresso/02/SDKPackages/SDK_2_4_1_FRDM-KL46Z/devices/MKL46Z4/MKL46Z4.h \

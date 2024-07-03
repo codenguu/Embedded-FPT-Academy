@@ -23,22 +23,20 @@ static void LED_Config();
 static void ADC0_Config();
 static void UART0_Config();
 static void BTN_Config();
-void SendDataVoltage();
+void SendDatatoPC();;
 
 
 /*========GREEN LED=========*/
 PORT_Config_t PortGreenLed;
 GPIO_Config_Type GpioGreenLed;
 
-/*========BUTTON=========*/
-PORT_Config_t PortSW1;
-GPIO_Config_Type GpioSW1;
-PORT_Config_t PortSW2;
-GPIO_Config_Type GpioSW2;
 /*=========RED LED===========*/
 PORT_Config_t PortRedLed;
 GPIO_Config_Type GpioRedLed;
 
+/*========BUTTON=========*/
+PORT_Config_t PortSW2;
+GPIO_Config_Type GpioSW2;
 /*=========ADC LIGHSS===========*/
 ADC_Config_t adcconfig_LightSNS;
 
@@ -49,7 +47,13 @@ PORT_Config_t Pin_uart0_Tx;
 
 /*Value ADC*/
 uint16_t valueADC;
-float voltage;
+typedef union
+{
+	float floatData;
+	uint8_t Data[4];
+}float_convert_type;
+
+float_convert_type vontage;
 
 /*Data Receive*/
 uint8_t Data_Rx;
@@ -88,7 +92,7 @@ int main(void) {
 			case 'C':
 				if(statePIT == PIT_OFF)
 				{
-					SendDataVoltage();
+					SendDatatoPC();
 				}
 				else
 				{
@@ -128,19 +132,13 @@ int main(void) {
 }
 
 /*HANDLE DATA ANALOG*/
-void SendDataVoltage()
+void SendDatatoPC()
 {
-	voltage = (float)(65535 - valueADC)/65535 * 3300;
-	UART_SendChar(0xA);
-	UART_SendString("Voltage: ", 9);
-	UART_SendChar(voltage/1000 + 0x30);
-	UART_SendChar(0x2E);
-	UART_SendChar((uint8_t)voltage/100%10 + 0x30);
-	UART_SendChar((uint8_t)voltage/10%10 + 0x30);
-	UART_SendChar((uint8_t)voltage%10 + 0x30);
+	vontage.floatData = (float)(65535 - valueADC)/65535 * 3.3;	//V
+	UART_SendString("voltage: ", 9);
+	UART_SendString(vontage.Data, 4);
 	UART_SendChar(0xA);
 }
-
 
 /*HANDLE INTERRUPT*/
 void UART0_ISR_Recievehandle()
@@ -150,6 +148,7 @@ void UART0_ISR_Recievehandle()
 void ADC_ISR_handle()
 {
 	valueADC = ADC_ReadDigital();
+	Data_Rx = 'C';
 }
 void PIT_ISR_handle()
 {
@@ -157,10 +156,6 @@ void PIT_ISR_handle()
 }
 void BTN_ISR_handle(uint8_t pin)
 {
-	if(pin == 3)
-	{
-		Data_Rx = 'C';
-	}
 	if(pin == 12)
 	{
 		Data_Rx = 'D';
@@ -216,19 +211,6 @@ static void UART0_Config()
 }
 static void BTN_Config()
 {
-	//SW1
-	PortSW1.PORTx = PORTC;
-	PortSW1.PIN = 3;
-	PortSW1.mux = PORT_MUX_GPIO;
-	PortSW1.pull = PORT_PULL_UP;
-	PortSW1.irqc = PORT_INTERRUPT_ON_FALLING_EDGE;
-	PortSW1.CallBack = BTN_ISR_handle;
-
-	GpioSW1.GPIOx = GPIOC;
-	GpioSW1.PIN = 3;
-	GpioSW1.pddr = GPIO_INPUT;
-
-	BTN_Init(&PortSW1, &GpioSW1);
 	//SW2
 	PortSW2.PORTx = PORTC;
 	PortSW2.PIN = 12;
